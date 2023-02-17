@@ -66,7 +66,11 @@ async def classify_image(image_url: str | None = None) -> dict:
       status_code=500,
       detail="Internal Server Error"
     )
-  
+  except Exception:
+    raise HTTPException(
+      status_code=404,
+      detail="An Error Occurred"
+    )
   if img_pil.mode == 'RGBA':
     # Convert the image to RGB if it has an alpha channel
     img_pil = img_pil.convert('RGB')
@@ -77,7 +81,7 @@ async def classify_image(image_url: str | None = None) -> dict:
   tensor_prediction = pytorch_model(img_tensor)
   class_prediction = torch.argmax(tensor_prediction, 1).item()
   
-  print(time.time() - start_time)
+  print("Time Taken :" + str(time.time() - start_time))
   #Returning Prediction Values
   return {
     "class_integer" : class_prediction,
