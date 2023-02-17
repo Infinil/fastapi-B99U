@@ -7,7 +7,6 @@ import time
 import torch
 import torchvision.models as models
 import torchvision.transforms as transforms
-import uvicorn
 
 os.environ['CUDA_VISIBLE_DEVICES'] = '-1'
 
@@ -43,9 +42,9 @@ image_transformations = transforms.Compose([
 ])
 
 #Fast API App Instance
-fast_api_app = FastAPI()
+app = FastAPI()
 
-@fast_api_app.get("/classify_image")
+@app.get("/classify_image")
 async def classify_image(image_url: str | None = None) -> dict:
   start_time = time.time()
   if image_url is None:
@@ -84,6 +83,3 @@ async def classify_image(image_url: str | None = None) -> dict:
     "class_integer" : class_prediction,
     "class_string" : all_classes[class_prediction]
   }
-
-# if __name__=="__main__":
-#   uvicorn.run(fast_api_app,host="127.0.0.1",port=8000)
